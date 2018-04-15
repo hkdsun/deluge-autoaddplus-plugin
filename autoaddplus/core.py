@@ -77,7 +77,7 @@ OPTIONS_AVAILABLE = { #option: builtin
 
 MAX_NUM_ATTEMPTS = 10
 
-class AutoaddOptionsChangedEvent(DelugeEvent):
+class AutoaddPlusOptionsChangedEvent(DelugeEvent):
     """Emitted when the options for the plugin are changed."""
     def __init__(self):
         pass
@@ -90,7 +90,7 @@ class Core(CorePluginBase):
     def enable(self):
         
         #reduce typing, assigning some values to self...
-        self.config = deluge.configmanager.ConfigManager("autoadd.conf", DEFAULT_PREFS)
+        self.config = deluge.configmanager.ConfigManager("autoaddplus.conf", DEFAULT_PREFS)
         self.watchdirs = self.config["watchdirs"]
         self.core_cfg = deluge.configmanager.ConfigManager("core.conf")
 
@@ -98,19 +98,19 @@ class Core(CorePluginBase):
         self.invalid_torrents = {}
         # Loopingcall timers for each enabled watchdir
         self.update_timers = {}
-        # If core autoadd folder is enabled, move it to the plugin
-        if self.core_cfg.config.get('autoadd_enable'):
-            # Disable core autoadd
-            self.core_cfg['autoadd_enable'] = False
+        # If core autoaddplus folder is enabled, move it to the plugin
+        if self.core_cfg.config.get('autoaddplus_enable'):
+            # Disable core autoaddplus
+            self.core_cfg['autoaddplus_enable'] = False
             self.core_cfg.save()
-            # Check if core autoadd folder is already added in plugin
+            # Check if core autoaddplus folder is already added in plugin
             for watchdir in self.watchdirs:
-                if os.path.abspath(self.core_cfg['autoadd_location']) == watchdir['abspath']:
+                if os.path.abspath(self.core_cfg['autoaddplus_location']) == watchdir['abspath']:
                     watchdir['enabled'] = True
                     break
             else:
                 # didn't find core watchdir, add it
-                self.add({'path':self.core_cfg['autoadd_location'], 'enabled':True})
+                self.add({'path':self.core_cfg['autoaddplus_location'], 'enabled':True})
         deferLater(reactor, 5, self.enable_looping)
 
     def enable_looping(self):
@@ -143,7 +143,7 @@ class Core(CorePluginBase):
         for key in options.keys():
             if not key in OPTIONS_AVAILABLE:
                 if not key in [key2+'_toggle' for key2 in OPTIONS_AVAILABLE.iterkeys()]:
-                    raise Exception("autoadd: Invalid options key:%s" % key)
+                    raise Exception("autoaddplus: Invalid options key:%s" % key)
         #disable the watch loop if it was active
         if watchdir_id in self.update_timers:
             self.disable_watchdir(watchdir_id)
@@ -153,7 +153,7 @@ class Core(CorePluginBase):
         if self.watchdirs[watchdir_id]['enabled']:
             self.enable_watchdir(watchdir_id)
         self.config.save()
-        component.get("EventManager").emit(AutoaddOptionsChangedEvent())
+        component.get("EventManager").emit(AutoaddPlusOptionsChangedEvent())
         
     def load_torrent(self, filename):
         try:
@@ -182,7 +182,7 @@ class Core(CorePluginBase):
             return
 
         if not os.path.isdir(watchdir["abspath"]):
-            log.warning("Invalid AutoAdd folder: %s", watchdir["abspath"])
+            log.warning("Invalid AutoAddPlus folder: %s", watchdir["abspath"])
             self.disable_watchdir(watchdir_id)
             return
         
@@ -223,12 +223,20 @@ class Core(CorePluginBase):
                 torrent_id = component.get("TorrentManager").add(filedump=filedump, filename=filename, options=opts)
                 # If the torrent added successfully, set the extra options.
                 if torrent_id:
-                    if 'Label' in component.get("CorePluginManager").get_enabled_plugins():
+                    enabled_plugins = component.get("CorePluginManager").get_enabled_plugins()
+                    if 'Label' in enabled_plugins and 'LabelPlus' in enabled_plugins:
                         if watchdir.get('label_toggle', True) and watchdir.get('label'):
+                            # Label
                             label = component.get("CorePlugin.Label")
                             if not watchdir['label'] in label.get_labels():
                                 label.add(watchdir['label'])
                             label.set_torrent(torrent_id, watchdir['label'])
+                            # LabelPlus
+                            labelplus = component.get("CorePlugin.LabelPlus")
+                            labelplus_data = labelplus.get_labels_data()
+                            for id in labelplus_data:
+                                if labelplus_data[id]["name"] == watchdir['label']:
+                                    labelplus.set_torrent_labels([torrent_id], id)
                     if watchdir.get('queue_to_top_toggle', True) and 'queue_to_top' in watchdir:
                         if watchdir['queue_to_top']:
                             component.get("TorrentManager").queue_top(torrent_id)
@@ -258,7 +266,7 @@ class Core(CorePluginBase):
         if not self.watchdirs[watchdir_id]['enabled']:
             self.watchdirs[watchdir_id]['enabled'] = True
             self.config.save()
-            component.get("EventManager").emit(AutoaddOptionsChangedEvent())
+            component.get("EventManager").emit(AutoaddPlusOptionsChangedEvent())
         
     @export
     def disable_watchdir(self, watchdir_id):
@@ -272,7 +280,7 @@ class Core(CorePluginBase):
         if self.watchdirs[watchdir_id]['enabled']:
             self.watchdirs[watchdir_id]['enabled'] = False
             self.config.save()
-            component.get("EventManager").emit(AutoaddOptionsChangedEvent())
+            component.get("EventManager").emit(AutoaddPlusOptionsChangedEvent())
 
     @export
     def set_config(self, config):
@@ -281,7 +289,7 @@ class Core(CorePluginBase):
         for key in config.keys():
             self.config[key] = config[key]
         self.config.save()
-        component.get("EventManager").emit(AutoaddOptionsChangedEvent())
+        component.get("EventManager").emit(AutoaddPlusOptionsChangedEvent())
 
     @export
     def get_config(self):
@@ -317,7 +325,7 @@ class Core(CorePluginBase):
             self.enable_watchdir(watchdir_id)
         self.config['next_id'] = watchdir_id + 1
         self.config.save()
-        component.get("EventManager").emit(AutoaddOptionsChangedEvent())
+        component.get("EventManager").emit(AutoaddPlusOptionsChangedEvent())
         return watchdir_id
         
     @export
@@ -329,4 +337,4 @@ class Core(CorePluginBase):
             self.disable_watchdir(watchdir_id)
         del self.watchdirs[watchdir_id]
         self.config.save()
-        component.get("EventManager").emit(AutoaddOptionsChangedEvent())
+        component.get("EventManager").emit(AutoaddPlusOptionsChangedEvent())

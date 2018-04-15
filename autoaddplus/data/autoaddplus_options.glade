@@ -4,7 +4,7 @@
   <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkDialog" id="error_dialog">
     <property name="border_width">6</property>
-    <property name="title" translatable="yes">AutoAdd Error</property>
+    <property name="title" translatable="yes">AutoAddPlus Error</property>
     <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="type_hint">dialog</property>

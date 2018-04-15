@@ -1,6 +1,6 @@
 /*
-Script: autoadd.js
-    The client-side javascript code for the AutoAdd plugin.
+Script: autoaddplus.js
+    The client-side javascript code for the AutoAddPlus plugin.
 
 Copyright:
     (C) GazpachoKing 2009 <damoxc@gmail.com>
@@ -31,12 +31,12 @@ Copyright:
     statement from all source files in the program, then also delete it here.
 */
 
-AutoAddPlugin = Ext.extend(Deluge.Plugin, {
+AutoAddPlusPlugin = Ext.extend(Deluge.Plugin, {
 	constructor: function(config) {
 		config = Ext.apply({
-			name: "AutoAdd"
+			name: "AutoAddPlus"
 		}, config);
-		AutoAddPlugin.superclass.constructor.call(this, config);
+		AutoAddPlusPlugin.superclass.constructor.call(this, config);
 	},
 	
 	onDisable: function() {
@@ -47,4 +47,4 @@ AutoAddPlugin = Ext.extend(Deluge.Plugin, {
 		
 	}
 });
-new AutoAddPlugin();
+new AutoAddPlusPlugin();

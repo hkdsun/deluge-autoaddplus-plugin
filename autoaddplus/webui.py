@@ -46,7 +46,7 @@ from common import get_resource
 
 class WebUI(WebPluginBase):
 
-    scripts = [get_resource("autoadd.js")]
+    scripts = [get_resource("autoaddplus.js")]
 
     def enable(self):
         pass
