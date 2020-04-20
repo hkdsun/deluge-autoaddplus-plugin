@@ -1,2 +1,2 @@
 #!/bin/sh
-/Applications/Deluge.app/Contents/MacOS/deluge -L debug -c ./conf
+/usr/bin/deluge -L warn -c ./conf
