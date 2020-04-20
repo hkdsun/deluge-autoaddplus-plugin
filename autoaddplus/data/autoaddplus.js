@@ -1,6 +1,6 @@
 /**
- * Script: autoadd.js
- *      The client-side javascript code for the AutoAdd plugin.
+ * Script: autoaddplus.js
+ *      The client-side javascript code for the AutoAddPlus plugin.
  *
  * Copyright (C) 2009 GazpachoKing <chase.sterling@gmail.com>
  *
@@ -9,26 +9,26 @@
  * See LICENSE for more details.
  */
 
-Ext.ns('Deluge.ux.AutoAdd');
-Deluge.ux.AutoAdd.onClickFunctions = {};
+Ext.ns('Deluge.ux.AutoAddPlus');
+Deluge.ux.AutoAddPlus.onClickFunctions = {};
 
 Ext.ns('Deluge.ux.preferences');
 
 /**
- * @class Deluge.ux.preferences.AutoAddPage
+ * @class Deluge.ux.preferences.AutoAddPlusPage
  * @extends Ext.Panel
  */
-Deluge.ux.preferences.AutoAddPage = Ext.extend(Ext.Panel, {
-    title: _('AutoAdd'),
+Deluge.ux.preferences.AutoAddPlusPage = Ext.extend(Ext.Panel, {
+    title: _('AutoAddPlus'),
     header: false,
     layout: 'fit',
     border: false,
     watchdirs: {},
 
     initComponent: function() {
-        Deluge.ux.preferences.AutoAddPage.superclass.initComponent.call(this);
+        Deluge.ux.preferences.AutoAddPlusPage.superclass.initComponent.call(this);
 
-        var autoAdd = this;
+        var autoAddPlus = this;
 
         this.list = new Ext.list.ListView({
             store: new Ext.data.JsonStore({
@@ -42,28 +42,28 @@ Deluge.ux.preferences.AutoAddPage = Ext.extend(Ext.Panel, {
                     dataIndex: 'enabled',
                     tpl: new Ext.XTemplate('{enabled:this.getCheckbox}', {
                         getCheckbox: function(checked, selected) {
-                            Deluge.ux.AutoAdd.onClickFunctions[
+                            Deluge.ux.AutoAddPlus.onClickFunctions[
                                 selected.id
                             ] = function() {
                                 if (selected.enabled) {
-                                    deluge.client.autoadd.disable_watchdir(
+                                    deluge.client.autoaddplus.disable_watchdir(
                                         selected.id
                                     );
                                     checked = false;
                                 } else {
-                                    deluge.client.autoadd.enable_watchdir(
+                                    deluge.client.autoaddplus.enable_watchdir(
                                         selected.id
                                     );
                                     checked = true;
                                 }
-                                autoAdd.updateWatchDirs();
+                                autoAddPlus.updateWatchDirs();
                             };
                             return (
                                 '<input id="enabled-' +
                                 selected.id +
                                 '" type="checkbox"' +
                                 (checked ? ' checked' : '') +
-                                ' onclick="Deluge.ux.AutoAdd.onClickFunctions[' +
+                                ' onclick="Deluge.ux.AutoAddPlus.onClickFunctions[' +
                                 selected.id +
                                 ']()" />'
                             );
@@ -123,7 +123,7 @@ Deluge.ux.preferences.AutoAddPage = Ext.extend(Ext.Panel, {
     },
 
     updateWatchDirs: function() {
-        deluge.client.autoadd.get_watchdirs({
+        deluge.client.autoaddplus.get_watchdirs({
             success: function(watchdirs) {
                 this.watchdirs = watchdirs;
                 var watchdirsArray = [];
@@ -147,7 +147,7 @@ Deluge.ux.preferences.AutoAddPage = Ext.extend(Ext.Panel, {
 
     onAddClick: function() {
         if (!this.addWin) {
-            this.addWin = new Deluge.ux.AutoAdd.AddAutoAddCommandWindow();
+            this.addWin = new Deluge.ux.AutoAddPlus.AddAutoAddPlusCommandWindow();
             this.addWin.on(
                 'watchdiradd',
                 function() {
@@ -161,7 +161,7 @@ Deluge.ux.preferences.AutoAddPage = Ext.extend(Ext.Panel, {
 
     onEditClick: function() {
         if (!this.editWin) {
-            this.editWin = new Deluge.ux.AutoAdd.EditAutoAddCommandWindow();
+            this.editWin = new Deluge.ux.AutoAddPlus.EditAutoAddPlusCommandWindow();
             this.editWin.on(
                 'watchdiredit',
                 function() {
@@ -180,7 +180,7 @@ Deluge.ux.preferences.AutoAddPage = Ext.extend(Ext.Panel, {
 
     onRemoveClick: function() {
         var record = this.list.getSelectedRecords()[0];
-        deluge.client.autoadd.remove(record.id, {
+        deluge.client.autoaddplus.remove(record.id, {
             success: function() {
                 this.updateWatchDirs();
             },
@@ -211,16 +211,16 @@ Deluge.ux.preferences.AutoAddPage = Ext.extend(Ext.Panel, {
     },
 });
 
-Deluge.plugins.AutoAddPlugin = Ext.extend(Deluge.Plugin, {
-    name: 'AutoAdd',
+Deluge.plugins.AutoAddPlusPlugin = Ext.extend(Deluge.Plugin, {
+    name: 'AutoAddPlus',
 
     static: {
         prefsPage: null,
     },
 
     onDisable: function() {
-        deluge.preferences.removePage(Deluge.plugins.AutoAddPlugin.prefsPage);
-        Deluge.plugins.AutoAddPlugin.prefsPage = null;
+        deluge.preferences.removePage(Deluge.plugins.AutoAddPlusPlugin.prefsPage);
+        Deluge.plugins.AutoAddPlusPlugin.prefsPage = null;
     },
 
     onEnable: function() {
@@ -228,12 +228,12 @@ Deluge.plugins.AutoAddPlugin = Ext.extend(Deluge.Plugin, {
          * Called for each of the JavaScript files.
          * This will prevent adding unnecessary tabs to the preferences window.
          */
-        if (!Deluge.plugins.AutoAddPlugin.prefsPage) {
-            Deluge.plugins.AutoAddPlugin.prefsPage = deluge.preferences.addPage(
-                new Deluge.ux.preferences.AutoAddPage()
+        if (!Deluge.plugins.AutoAddPlusPlugin.prefsPage) {
+            Deluge.plugins.AutoAddPlusPlugin.prefsPage = deluge.preferences.addPage(
+                new Deluge.ux.preferences.AutoAddPlusPage()
             );
         }
     },
 });
 
-Deluge.registerPlugin('AutoAdd', Deluge.plugins.AutoAddPlugin);
+Deluge.registerPlugin('AutoAddPlus', Deluge.plugins.AutoAddPlusPlugin);

@@ -210,7 +210,7 @@ class Core(CorePluginBase):
             return
 
         if not os.path.isdir(watchdir['abspath']):
-            log.warning('Invalid AutoAdd folder: %s', watchdir['abspath'])
+            log.warning('Invalid AutoAddPlus folder: %s', watchdir['abspath'])
             self.disable_watchdir(watchdir_id)
             return
 
@@ -327,7 +327,7 @@ class Core(CorePluginBase):
             def fail_torrent_add(err_msg, filepath, magnet):
                 # torrent handle is invalid and so is the magnet link
                 log.error(
-                    'Cannot Autoadd %s: %s: %s',
+                    'Cannot AutoaddPlus %s: %s: %s',
                     'magnet' if magnet else 'torrent file',
                     filepath,
                     err_msg,
@@ -371,7 +371,7 @@ class Core(CorePluginBase):
         if not self.watchdirs[w_id]['enabled']:
             self.watchdirs[w_id]['enabled'] = True
             self.config.save()
-            component.get('EventManager').emit(AutoaddOptionsChangedEvent())
+            component.get('EventManager').emit(AutoaddPlusOptionsChangedEvent())
 
     @export
     def disable_watchdir(self, watchdir_id):
@@ -385,7 +385,7 @@ class Core(CorePluginBase):
         if self.watchdirs[w_id]['enabled']:
             self.watchdirs[w_id]['enabled'] = False
             self.config.save()
-            component.get('EventManager').emit(AutoaddOptionsChangedEvent())
+            component.get('EventManager').emit(AutoaddPlusOptionsChangedEvent())
 
     @export
     def set_config(self, config):
@@ -394,7 +394,7 @@ class Core(CorePluginBase):
         for key in config:
             self.config[key] = config[key]
         self.config.save()
-        component.get('EventManager').emit(AutoaddOptionsChangedEvent())
+        component.get('EventManager').emit(AutoaddPlusOptionsChangedEvent())
 
     @export
     def get_config(self):
@@ -455,7 +455,7 @@ class Core(CorePluginBase):
             self.enable_watchdir(watchdir_id)
         self.config['next_id'] = watchdir_id + 1
         self.config.save()
-        component.get('EventManager').emit(AutoaddOptionsChangedEvent())
+        component.get('EventManager').emit(AutoaddPlusOptionsChangedEvent())
         return watchdir_id
 
     @export
@@ -469,7 +469,7 @@ class Core(CorePluginBase):
             self.disable_watchdir(watchdir_id)
         del self.watchdirs[watchdir_id]
         self.config.save()
-        component.get('EventManager').emit(AutoaddOptionsChangedEvent())
+        component.get('EventManager').emit(AutoaddPlusOptionsChangedEvent())
 
     def __migrate_config_1_to_2(self, config):
         for watchdir_id in config['watchdirs']:

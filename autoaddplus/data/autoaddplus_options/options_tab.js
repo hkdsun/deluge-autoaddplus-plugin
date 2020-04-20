@@ -1,6 +1,6 @@
 /**
  * Script: options_tab.js
- *      The client-side javascript code for the AutoAdd plugin.
+ *      The client-side javascript code for the AutoAddPlus plugin.
  *
  * Copyright (C) 2009 GazpachoKing <chase.sterling@gmail.com>
  *
@@ -9,18 +9,18 @@
  * See LICENSE for more details.
  */
 
-Ext.ns('Deluge.ux.AutoAdd');
+Ext.ns('Deluge.ux.AutoAddPlus');
 
 /**
- * @class Deluge.ux.AutoAdd.AutoAddOptionsPanel
+ * @class Deluge.ux.AutoAddPlus.AutoAddPlusOptionsPanel
  * @extends Ext.Panel
  */
-Deluge.ux.AutoAdd.AutoAddOptionsPanel = Ext.extend(Ext.Panel, {
+Deluge.ux.AutoAddPlus.AutoAddPlusOptionsPanel = Ext.extend(Ext.Panel, {
     id: 'options_tab_panel',
     title: _('Options'),
 
     initComponent: function() {
-        Deluge.ux.AutoAdd.AutoAddOptionsPanel.superclass.initComponent.call(
+        Deluge.ux.AutoAddPlus.AutoAddPlusOptionsPanel.superclass.initComponent.call(
             this
         );
         var maxDownload = {

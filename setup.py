@@ -43,11 +43,11 @@ __plugin_name__ = "AutoAddPlus"
 __author__ = "Hormoz Kheradmand"
 __author_email__ = "hkheradm@gmail.com"
 __version__ = '1.8'
-__url__ = 'http://dev.deluge-torrent.org/wiki/Plugins/AutoAdd'
+__url__ = 'http://dev.deluge-torrent.org/wiki/Plugins/AutoAddPlus'
 __license__ = 'GPLv3'
 __description__ = "Monitors folders for .torrent files with support for LabelPlus."
 __long_description__ = """"""
-__pkg_data__ = {'deluge_' + __plugin_name__.lower(): ['data/*', 'data/*/*']}
+__pkg_data__ = {__plugin_name__.lower(): ['data/*', 'data/*/*']}
 
 setup(
     name=__plugin_name__,
@@ -58,15 +58,15 @@ setup(
     url=__url__,
     license=__license__,
     long_description=__long_description__ if __long_description__ else __description__,
-    packages=find_packages(),
+    packages=[__plugin_name__.lower()],
     package_data=__pkg_data__,
     entry_points="""
     [deluge.plugin.core]
-    %s = deluge_%s:CorePlugin
+    %s = %s:CorePlugin
     [deluge.plugin.gtk3ui]
-    %s = deluge_%s:Gtk3UIPlugin
+    %s = %s:Gtk3UIPlugin
     [deluge.plugin.web]
-    %s = deluge_%s:WebUIPlugin
+    %s = %s:WebUIPlugin
     """
     % ((__plugin_name__, __plugin_name__.lower()) * 3),
 )

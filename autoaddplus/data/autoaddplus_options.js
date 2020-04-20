@@ -1,6 +1,6 @@
 /**
- * Script: autoadd.js
- *      The client-side javascript code for the AutoAdd plugin.
+ * Script: autoaddplus.js
+ *      The client-side javascript code for the AutoAddPlus plugin.
  *
  * Copyright (C) 2009 GazpachoKing <chase.sterling@gmail.com>
  *
@@ -9,13 +9,13 @@
  * See LICENSE for more details.
  */
 
-Ext.ns('Deluge.ux.AutoAdd');
+Ext.ns('Deluge.ux.AutoAddPlus');
 
 /**
- * @class Deluge.ux.AutoAdd.AutoAddWindowBase
+ * @class Deluge.ux.AutoAddPlus.AutoAddPlusWindowBase
  * @extends Ext.Window
  */
-Deluge.ux.AutoAdd.AutoAddWindowBase = Ext.extend(Ext.Window, {
+Deluge.ux.AutoAddPlus.AutoAddPlusWindowBase = Ext.extend(Ext.Window, {
     width: 350,
     autoHeight: true,
     closeAction: 'hide',
@@ -61,11 +61,11 @@ Deluge.ux.AutoAdd.AutoAddWindowBase = Ext.extend(Ext.Window, {
     }),
 
     initComponent: function() {
-        Deluge.ux.AutoAdd.AutoAddWindowBase.superclass.initComponent.call(this);
+        Deluge.ux.AutoAddPlus.AutoAddPlusWindowBase.superclass.initComponent.call(this);
         this.addButton(_('Cancel'), this.onCancelClick, this);
 
-        this.MainTab = new Deluge.ux.AutoAdd.AutoAddMainPanel();
-        this.OptionsTab = new Deluge.ux.AutoAdd.AutoAddOptionsPanel();
+        this.MainTab = new Deluge.ux.AutoAddPlus.AutoAddPlusMainPanel();
+        this.OptionsTab = new Deluge.ux.AutoAddPlus.AutoAddPlusOptionsPanel();
 
         this.form = this.add({
             xtype: 'form',
@@ -330,7 +330,7 @@ Deluge.ux.AutoAdd.AutoAddWindowBase = Ext.extend(Ext.Window, {
         }
 
         function on_accounts_failure(failure) {
-            deluge.client.autoadd.get_auth_user({
+            deluge.client.autoaddplus.get_auth_user({
                 success: function(user) {
                     me.accounts.loadData([[user]], false);
                     Ext.getCmp('owner')
@@ -341,12 +341,12 @@ Deluge.ux.AutoAdd.AutoAddWindowBase = Ext.extend(Ext.Window, {
             });
         }
 
-        deluge.client.autoadd.is_admin_level({
+        deluge.client.autoaddplus.is_admin_level({
             success: function(is_admin) {
                 if (is_admin) {
                     deluge.client.core.get_known_accounts({
                         success: function(accounts) {
-                            deluge.client.autoadd.get_auth_user({
+                            deluge.client.autoaddplus.get_auth_user({
                                 success: function(user) {
                                     on_accounts(
                                         accounts,
@@ -371,16 +371,16 @@ Deluge.ux.AutoAdd.AutoAddWindowBase = Ext.extend(Ext.Window, {
 });
 
 /**
- * @class Deluge.ux.AutoAdd.EditAutoAddCommandWindow
- * @extends Deluge.ux.AutoAdd.AutoAddWindowBase
+ * @class Deluge.ux.AutoAddPlus.EditAutoAddPlusCommandWindow
+ * @extends Deluge.ux.AutoAddPlus.AutoAddPlusWindowBase
  */
-Deluge.ux.AutoAdd.EditAutoAddCommandWindow = Ext.extend(
-    Deluge.ux.AutoAdd.AutoAddWindowBase,
+Deluge.ux.AutoAddPlus.EditAutoAddPlusCommandWindow = Ext.extend(
+    Deluge.ux.AutoAddPlus.AutoAddPlusWindowBase,
     {
         title: _('Edit Watch Folder'),
 
         initComponent: function() {
-            Deluge.ux.AutoAdd.EditAutoAddCommandWindow.superclass.initComponent.call(
+            Deluge.ux.AutoAddPlus.EditAutoAddPlusCommandWindow.superclass.initComponent.call(
                 this
             );
             this.addButton(_('Save'), this.onSaveClick, this);
@@ -390,7 +390,7 @@ Deluge.ux.AutoAdd.EditAutoAddCommandWindow = Ext.extend(
         },
 
         show: function(watchdir_id, options) {
-            Deluge.ux.AutoAdd.EditAutoAddCommandWindow.superclass.show.call(
+            Deluge.ux.AutoAddPlus.EditAutoAddPlusCommandWindow.superclass.show.call(
                 this
             );
             this.watchdir_id = watchdir_id;
@@ -400,7 +400,7 @@ Deluge.ux.AutoAdd.EditAutoAddCommandWindow = Ext.extend(
         onSaveClick: function() {
             try {
                 var options = this.getOptions();
-                deluge.client.autoadd.set_options(this.watchdir_id, options, {
+                deluge.client.autoaddplus.set_options(this.watchdir_id, options, {
                     success: function() {
                         this.fireEvent('watchdiredit', this, options);
                     },
@@ -421,16 +421,16 @@ Deluge.ux.AutoAdd.EditAutoAddCommandWindow = Ext.extend(
 );
 
 /**
- * @class Deluge.ux.AutoAdd.AddAutoAddCommandWindow
- * @extends Deluge.ux.AutoAdd.AutoAddWindowBase
+ * @class Deluge.ux.AutoAddPlus.AddAutoAddPlusCommandWindow
+ * @extends Deluge.ux.AutoAddPlus.AutoAddPlusWindowBase
  */
-Deluge.ux.AutoAdd.AddAutoAddCommandWindow = Ext.extend(
-    Deluge.ux.AutoAdd.AutoAddWindowBase,
+Deluge.ux.AutoAddPlus.AddAutoAddPlusCommandWindow = Ext.extend(
+    Deluge.ux.AutoAddPlus.AutoAddPlusWindowBase,
     {
         title: _('Add Watch Folder'),
 
         initComponent: function() {
-            Deluge.ux.AutoAdd.AddAutoAddCommandWindow.superclass.initComponent.call(
+            Deluge.ux.AutoAddPlus.AddAutoAddPlusCommandWindow.superclass.initComponent.call(
                 this
             );
             this.addButton(_('Add'), this.onAddClick, this);
@@ -440,7 +440,7 @@ Deluge.ux.AutoAdd.AddAutoAddCommandWindow = Ext.extend(
         },
 
         show: function() {
-            Deluge.ux.AutoAdd.AddAutoAddCommandWindow.superclass.show.call(
+            Deluge.ux.AutoAddPlus.AddAutoAddPlusCommandWindow.superclass.show.call(
                 this
             );
             this.loadOptions();
@@ -448,7 +448,7 @@ Deluge.ux.AutoAdd.AddAutoAddCommandWindow = Ext.extend(
 
         onAddClick: function() {
             var options = this.getOptions();
-            deluge.client.autoadd.add(options, {
+            deluge.client.autoaddplus.add(options, {
                 success: function() {
                     this.fireEvent('watchdiradd', this, options);
                     this.hide();

@@ -25,8 +25,8 @@ log = logging.getLogger(__name__)
 
 class WebUI(WebPluginBase):
     scripts = [
-        get_resource('autoadd.js'),
-        get_resource('autoadd_options.js'),
+        get_resource('autoaddplus.js'),
+        get_resource('autoaddplus_options.js'),
         get_resource('main_tab.js', True),
         get_resource('options_tab.js', True),
     ]

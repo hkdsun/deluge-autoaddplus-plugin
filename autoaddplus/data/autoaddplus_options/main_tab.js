@@ -1,6 +1,6 @@
 /**
  * Script: main_tab.js
- *      The client-side javascript code for the AutoAdd plugin.
+ *      The client-side javascript code for the AutoAddPlus plugin.
  *
  * Copyright (C) 2009 GazpachoKing <chase.sterling@gmail.com>
  *
@@ -9,18 +9,18 @@
  * See LICENSE for more details.
  */
 
-Ext.ns('Deluge.ux.AutoAdd');
+Ext.ns('Deluge.ux.AutoAddPlus');
 
 /**
- * @class Deluge.ux.AutoAdd.AutoAddMainPanel
+ * @class Deluge.ux.AutoAddPlus.AutoAddPlusMainPanel
  * @extends Ext.Panel
  */
-Deluge.ux.AutoAdd.AutoAddMainPanel = Ext.extend(Ext.Panel, {
+Deluge.ux.AutoAddPlus.AutoAddPlusMainPanel = Ext.extend(Ext.Panel, {
     id: 'main_tab_panel',
     title: _('Main'),
 
     initComponent: function() {
-        Deluge.ux.AutoAdd.AutoAddMainPanel.superclass.initComponent.call(this);
+        Deluge.ux.AutoAddPlus.AutoAddPlusMainPanel.superclass.initComponent.call(this);
         this.watchFolderFset = new Ext.form.FieldSet({
             xtype: 'fieldset',
             border: false,
