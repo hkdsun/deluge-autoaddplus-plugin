@@ -288,15 +288,24 @@ class Core(CorePluginBase):
                 continue
 
             def on_torrent_added(torrent_id, filename, filepath):
-                if 'Label' in component.get('CorePluginManager').get_enabled_plugins():
+                enabled_plugins = component.get('CorePluginManager').get_enabled_plugins()
+                if 'Label' in enabled_plugins and 'LabelPlus' in enabled_plugins:
                     if watchdir.get('label_toggle', True) and watchdir.get('label'):
+                        # Label
                         label = component.get('CorePlugin.Label')
                         if not watchdir['label'] in label.get_labels():
                             label.add(watchdir['label'])
                         try:
                             label.set_torrent(torrent_id, watchdir['label'])
                         except Exception as ex:
-                            log.error('Unable to set label: %s', ex)
+                            log.error('Unable to set core label: %s', ex)
+
+                        # LabelPlus
+                        labelplus = component.get('CorePlugin.LabelPlus')
+                        labelplus_data = labelplus.get_labels_data()
+                        for id in labelplus_data:
+                            if labelplus_data[id]["name"] == watchdir['label']:
+                                labelplus.set_torrent_labels([torrent_id], id)
 
                 if (
                     watchdir.get('queue_to_top_toggle', True)

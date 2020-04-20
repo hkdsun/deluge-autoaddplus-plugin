@@ -234,7 +234,7 @@ class OptionsDialog(object):
             log.exception(failure)
 
         def on_get_enabled_plugins(result):
-            if 'Label' in result:
+            if 'LabelPlus' in result and 'Label' in result:
                 self.builder.get_object('label_frame').show()
                 client.label.get_labels().addCallback(on_labels).addErrback(on_failure)
             else:
